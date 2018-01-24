@@ -59,7 +59,7 @@ class Product
      *
      * @ORM\Column(name="creater_at", type="datetime")
      */
-    private $createrAt;
+    private $createdAt;
 
     /**
      * @var \DateTime
@@ -176,27 +176,27 @@ class Product
     }
 
     /**
-     * Set createrAt
+     * Set createdAt
      *
-     * @param \DateTime $createrAt
+     * @param \DateTime $createdAt
      *
      * @return Product
      */
-    public function setCreaterAt($createrAt)
+    public function setCreatedAt($createdAt)
     {
-        $this->createrAt = $createrAt;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
     /**
-     * Get createrAt
+     * Get createdAt
      *
      * @return \DateTime
      */
-    public function getCreaterAt()
+    public function getCreatedAt()
     {
-        return $this->createrAt;
+        return $this->createdAt;
     }
 
     /**
@@ -230,5 +230,5 @@ class Product
      */
     private $category;
 
-    
+
 }
