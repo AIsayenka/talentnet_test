@@ -57,7 +57,7 @@ class Product
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="creater_at", type="datetime")
+     * @ORM\Column(name="created_at", type="datetime")
      */
     private $createdAt;
 
