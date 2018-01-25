@@ -87,7 +87,6 @@ class ApiProductsControllerController extends Controller
      */
     public function create_recordAction(Request $request)
     {
-        print_r($request->request->all());die();
         // Needed to run a query to save the data
         $manager = $this->getDoctrine()->getManager();
 
@@ -100,21 +99,32 @@ class ApiProductsControllerController extends Controller
         $record->setCreatedAt(new \DateTime("now"));
         $record->setUpdatedAt(new \DateTime("now"));
 
-        // Set up the upcoming query to save the data
-        $manager->persist($record);
+        $validator = $this->get('validator');
+        $errors = $validator->validate($record);
 
-        // Run the query
-        $manager->flush();
+        if(count($errors) > 0) {
+          // if there is an error with validation
+          $data_array = array(
+            "data" => "The data input is incorrect. Error(s): ".(string) $errors
+          );
+          $manager->clear();
+        } else { // if everything is fine
+          // Set up the upcoming query to save the data
+          $manager->persist($record);
+          // Run the query
+          $manager->flush();
 
-        $data_array = array(
-          'id' => $record->getId(),
-          'name' => $record->getName(),
-          'sku' => $record->getSku(),
-          'price' => $record->getPrice(),
-          'quantity' => $record->getQuantity(),
-          'created_at' => $record->getCreatedAt(),
-          'updated_at' => $record->getUpdatedAt(),
-        );
+          // Return updated record
+          $data_array = array(
+            'id' => $record->getId(),
+            'name' => $record->getName(),
+            'sku' => $record->getSku(),
+            'price' => $record->getPrice(),
+            'quantity' => $record->getQuantity(),
+            'created_at' => $record->getCreatedAt(),
+            'updated_at' => $record->getUpdatedAt(),
+          );
+        }
 
         $response = new JsonResponse($data_array);
         return $response;
@@ -126,7 +136,8 @@ class ApiProductsControllerController extends Controller
      */
     public function update_recordAction($id, Request $request)
     {
-        //print_r($request);die();
+        // Validation groups
+        $validation_groups = [];
         // Needed to run a query to save the data
         $manager = $this->getDoctrine()->getManager();
 
@@ -141,38 +152,58 @@ class ApiProductsControllerController extends Controller
 
         // Check of attributes
         // Name
-        if($request->get("name") !== "" && $request->get("name") !== $record->getName()) {
+        if($request->get("name") !== null && $request->get("name") !== $record->getName()) {
           $record->setName($request->get("name"));
+          $validation_groups[] = "name";
         }
 
         // SKU
         if($request->get("sku") !== "" && $request->get("sku") !== $record->getSku()) {
           $record->setSku($request->get("sku"));
+          $validation_groups[] = "sku";
         }
 
         // Quantity
-        if($request->get("quantity") !== "" && $request->get("quantity") !== $record->getQuantity()) {
-          $record->setQuantity($request->get("quantity"));
+        if($request->get("quantity") !== null && $request->get("quantity") !== $record->getQuantity()) {
+          $record->setQuantity(intval($request->get("quantity")));
+          $validation_groups[] = "quantity";
         }
 
         // price
-        if($request->get("price") !== "" && $request->get("price") !== $record->getPrice()) {
-          $record->setPrice($request->get("price"));
+        if($request->get("price") !== null && $request->get("price") !== $record->getPrice()) {
+          $record->setPrice(floatval($request->get("price")));
+          $validation_groups[] = "price";
         }
 
-        // Run the query
-        $manager->flush();
+        // Updating updated at
+        $record->setUpdatedAt(new \DateTime("now"));
 
-        // Return updated record
-        $data_array = array(
-          'id' => $record->getId(),
-          'name' => $record->getName(),
-          'sku' => $record->getSku(),
-          'price' => $record->getPrice(),
-          'quantity' => $record->getQuantity(),
-          'created_at' => $record->getCreatedAt(),
-          'updated_at' => $record->getUpdatedAt(),
-        );
+        $record = $manager->merge($record);
+
+        $validator = $this->get('validator');
+        $errors = $validator->validate($record, null, $validation_groups);
+
+        if(count($errors) > 0) {
+          // if there is an error with validation
+          $data_array = array(
+            "data" => "The data input is incorrect. Error(s): ".(string) $errors
+          );
+          $manager->clear();
+        } else { // if everything is fine
+          // Run the query
+          $manager->flush();
+
+          // Return updated record
+          $data_array = array(
+            'id' => $record->getId(),
+            'name' => $record->getName(),
+            'sku' => $record->getSku(),
+            'price' => $record->getPrice(),
+            'quantity' => $record->getQuantity(),
+            'created_at' => $record->getCreatedAt(),
+            'updated_at' => $record->getUpdatedAt(),
+          );
+        }
 
         $response = new JsonResponse($data_array);
         return $response;
@@ -201,13 +232,6 @@ class ApiProductsControllerController extends Controller
 
         $response = new JsonResponse(["data" => "The record was successfully deleted"]);
         return $response;
-    }
-
-    /**
-     * @Route("/", name="test")
-     */
-    public function test() {
-      return Response::create("It's working!!!!");
     }
 
 }

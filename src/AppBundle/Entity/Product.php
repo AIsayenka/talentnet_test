@@ -25,23 +25,24 @@ class Product
 
     /**
      * @var string
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(groups={"name"})
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
 
     /**
      * @var string
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(groups={"sku"})
      * @ORM\Column(name="sku", type="string", length=255, unique=true)
      */
     private $sku;
 
     /**
-     * @var string
+     * @var double
      * @Assert\Type(
      *     type="double",
-     *     message="The value {{ value }} is not a valid {{ type }}."
+     *     message="The value {{ value }} is not a valid {{ type }}.",
+     *     groups={"price"}
      * )
      * @Assert\NotBlank()
      * @ORM\Column(name="price", type="decimal", precision=10, scale=2)
@@ -52,9 +53,10 @@ class Product
      * @var int
      * @Assert\Type(
      *     type="integer",
-     *     message="The value {{ value }} is not a valid {{ type }}."
+     *     message="The value {{ value }} is not a valid {{ type }}.",
+     *     groups={"quantity"}
      * )
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(groups={"quantity"})
      * @ORM\Column(name="quantity", type="integer")
      */
     private $quantity;
@@ -141,7 +143,7 @@ class Product
      */
     public function setPrice($price)
     {
-        $this->price = $price;
+        $this->price = doubleval($price);
 
         return $this;
     }
@@ -153,7 +155,7 @@ class Product
      */
     public function getPrice()
     {
-        return $this->price;
+        return doubleval($this->price);
     }
 
     /**
@@ -165,7 +167,7 @@ class Product
      */
     public function setQuantity($quantity)
     {
-        $this->quantity = $quantity;
+        $this->quantity = intval($quantity);
 
         return $this;
     }
@@ -177,7 +179,7 @@ class Product
      */
     public function getQuantity()
     {
-        return $this->quantity;
+        return intval($this->quantity);
     }
 
     /**
