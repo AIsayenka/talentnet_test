@@ -4,6 +4,8 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * Product
  *
@@ -23,47 +25,50 @@ class Product
 
     /**
      * @var string
-     *
+     * @Assert\NotBlank()
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
 
     /**
      * @var string
-     *
+     * @Assert\NotBlank()
      * @ORM\Column(name="sku", type="string", length=255, unique=true)
      */
     private $sku;
 
     /**
      * @var string
-     *
+     * @Assert\Type(
+     *     type="double",
+     *     message="The value {{ value }} is not a valid {{ type }}."
+     * )
+     * @Assert\NotBlank()
      * @ORM\Column(name="price", type="decimal", precision=10, scale=2)
      */
     private $price;
 
     /**
      * @var int
-     *
+     * @Assert\Type(
+     *     type="integer",
+     *     message="The value {{ value }} is not a valid {{ type }}."
+     * )
+     * @Assert\NotBlank()
      * @ORM\Column(name="quantity", type="integer")
      */
     private $quantity;
 
     /**
-    * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="products")
-    * @ORM\JoinColumn(nullable=true)
-    */
-
-    /**
      * @var \DateTime
-     *
+     * @Assert\DateTime()
      * @ORM\Column(name="created_at", type="datetime")
      */
     private $createdAt;
 
     /**
      * @var \DateTime
-     *
+     * @Assert\DateTime()
      * @ORM\Column(name="updated_at", type="datetime")
      */
     private $updatedAt;

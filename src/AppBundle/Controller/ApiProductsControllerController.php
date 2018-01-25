@@ -4,10 +4,12 @@ namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 use AppBundle\Entity\Product;
 use AppBundle\Entity\Category;
@@ -18,83 +20,175 @@ class ApiProductsControllerController extends Controller
 
     function __construct() {
       // Needed to run a query to save the data
-      $manager = $this->getDoctrine()->getManager();
+      //$manager = $this->getDoctrine()->getManager();
     }
     /**
-     * @Route("/api/products/all")
+     * @Route("/api/products/all", name="products_list")
+     * @Method({"GET"})
      */
     public function get_allAction()
     {
         $repository = $this->getDoctrine()->getRepository(Product::class);
-        //$repository = $this->manager->getRepository(Product::class);
         $records = $repository->findAll();
+        $data_array = array();
 
-        $response = new JsonResponse($records);
+        // Creating array with all the data
+        foreach($records as $item) {
+             $data_array[] = array(
+                 'id' => $item->getId(),
+                 'name' => $item->getName(),
+                 'sku' => $item->getSku(),
+                 'price' => $item->getPrice(),
+                 'quantity' => $item->getQuantity(),
+                 'created_at' => $item->getCreatedAt(),
+                 'updated_at' => $item->getUpdatedAt(),
+             );
+        }
+
+        $response = new JsonResponse($data_array);
         return $response;
+        //return JsonResponse::create(["data" => "IAM WORKING"]);
     }
 
     /**
-     * @Route("/api/products/{id}")
+     * @Route("/api/products/{id}", name="product_list")
+     * @Method({"GET"})
      */
     public function get_oneAction($id)
     {
+
         $repository = $this->getDoctrine()->getRepository(Product::class);
         //$repository = $this->manager->getRepository(Product::class);
         $record = $repository->findOneById($id);
 
-        $response = new JsonResponse($record);
-        return $response;
-    }
-
-    /**
-     * @Route("/api/products/create")
-     */
-    public function create_recordAction()
-    {
-        // Setting data
-        $record = new Product();
-        $record->setName("");
-        $record->setName("");
-        $record->setName("");
-
-        // Set up the upcoming query to save the data
-        $this->manager->persist($record);
-
-        // Run the query
-        $this->manager->flush();
-
-        $response = new JsonResponse($records);
-        return $response;
-    }
-
-    /**
-     * @Route("/api/products/{id}/update")
-     */
-    public function update_recordAction($id)
-    {
-        $record = $this->manager->getRepository(Product::class)->find($id);
-
-        if (!$record) {
-            throw $this->createNotFoundException(
-                'No product found for id '.$id
-            );
+        if ($record) {
+          $data_array = array(
+            'id' => $record->getId(),
+            'name' => $record->getName(),
+            'sku' => $record->getSku(),
+            'price' => $record->getPrice(),
+            'quantity' => $record->getQuantity(),
+            'created_at' => $record->getCreatedAt(),
+            'updated_at' => $record->getUpdatedAt(),
+          );
+        } else {
+          $data_array = array(
+            'data' => "There is no such record"
+          );
         }
 
-        // TODO check for attributes in the request and update them appropriately
-
-        // Run the query
-        $this->manager->flush();
-
-        $response = new JsonResponse($record);
+        $response = new JsonResponse($data_array);
         return $response;
     }
 
     /**
-     * @Route("/api/products/{id}/delete")
+     * @Route("/api/products/create", name="create_product")
+     * @Method({"POST"})
+     */
+    public function create_recordAction(Request $request)
+    {
+        print_r($request->request->all());die();
+        // Needed to run a query to save the data
+        $manager = $this->getDoctrine()->getManager();
+
+        // Setting data
+        $record = new Product();
+        $record->setName($request->get("name", ""));
+        $record->setSku($request->get("sku", ""));
+        $record->setPrice($request->get("price", ""));
+        $record->setQuantity($request->get("quantity", ""));
+        $record->setCreatedAt(new \DateTime("now"));
+        $record->setUpdatedAt(new \DateTime("now"));
+
+        // Set up the upcoming query to save the data
+        $manager->persist($record);
+
+        // Run the query
+        $manager->flush();
+
+        $data_array = array(
+          'id' => $record->getId(),
+          'name' => $record->getName(),
+          'sku' => $record->getSku(),
+          'price' => $record->getPrice(),
+          'quantity' => $record->getQuantity(),
+          'created_at' => $record->getCreatedAt(),
+          'updated_at' => $record->getUpdatedAt(),
+        );
+
+        $response = new JsonResponse($data_array);
+        return $response;
+    }
+
+    /**
+     * @Route("/api/products/{id}/update", name="update_product")
+     * @Method({"PATCH", "PUT"})
+     */
+    public function update_recordAction($id, Request $request)
+    {
+        //print_r($request);die();
+        // Needed to run a query to save the data
+        $manager = $this->getDoctrine()->getManager();
+
+        $record = $manager->getRepository(Product::class)->find($id);
+
+        if (!$record) {
+          $data_array = array(
+            'data' => "There is no such record"
+          );
+          return new JsonResponse($data_array);
+        }
+
+        // Check of attributes
+        // Name
+        if($request->get("name") !== "" && $request->get("name") !== $record->getName()) {
+          $record->setName($request->get("name"));
+        }
+
+        // SKU
+        if($request->get("sku") !== "" && $request->get("sku") !== $record->getSku()) {
+          $record->setSku($request->get("sku"));
+        }
+
+        // Quantity
+        if($request->get("quantity") !== "" && $request->get("quantity") !== $record->getQuantity()) {
+          $record->setQuantity($request->get("quantity"));
+        }
+
+        // price
+        if($request->get("price") !== "" && $request->get("price") !== $record->getPrice()) {
+          $record->setPrice($request->get("price"));
+        }
+
+        // Run the query
+        $manager->flush();
+
+        // Return updated record
+        $data_array = array(
+          'id' => $record->getId(),
+          'name' => $record->getName(),
+          'sku' => $record->getSku(),
+          'price' => $record->getPrice(),
+          'quantity' => $record->getQuantity(),
+          'created_at' => $record->getCreatedAt(),
+          'updated_at' => $record->getUpdatedAt(),
+        );
+
+        $response = new JsonResponse($data_array);
+        return $response;
+    }
+
+    /**
+     * @Route("/api/products/{id}/delete", name="delete_product")
+     * @Method({"DELETE"})
      */
     public function delete_recordAction($id)
     {
-        $record = $this->manager->getRepository(Product::class)->find($id);
+
+        // Needed to run a query to save the data
+        $manager = $this->getDoctrine()->getManager();
+
+        $record = $manager->getRepository(Product::class)->find($id);
 
         if (!$record) {
             throw $this->createNotFoundException(
@@ -102,11 +196,18 @@ class ApiProductsControllerController extends Controller
             );
         }
 
-        $this->manager->remove($record);
-        $this->manager->flush();
+        $manager->remove($record);
+        $manager->flush();
 
-        $response = new JsonResponse($records);
+        $response = new JsonResponse(["data" => "The record was successfully deleted"]);
         return $response;
+    }
+
+    /**
+     * @Route("/", name="test")
+     */
+    public function test() {
+      return Response::create("It's working!!!!");
     }
 
 }
