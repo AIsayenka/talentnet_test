@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Constraints\DateTime;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 use AppBundle\Entity\Product;
 use AppBundle\Entity\Category;
@@ -84,9 +85,15 @@ class ApiProductsControllerController extends Controller
     /**
      * @Route("/api/products/create", name="create_product")
      * @Method({"POST"})
+     * @Security("has_role('IS_AUTHENTICATED_FULLY')")
      */
     public function create_recordAction(Request $request)
     {
+        // Validation groups
+        $validation_groups = [
+          "name", "sku", "quantity", "price"
+        ];
+
         // Needed to run a query to save the data
         $manager = $this->getDoctrine()->getManager();
 
@@ -100,7 +107,7 @@ class ApiProductsControllerController extends Controller
         $record->setUpdatedAt(new \DateTime("now"));
 
         $validator = $this->get('validator');
-        $errors = $validator->validate($record);
+        $errors = $validator->validate($record, null, $validation_groups);
 
         if(count($errors) > 0) {
           // if there is an error with validation
@@ -133,6 +140,7 @@ class ApiProductsControllerController extends Controller
     /**
      * @Route("/api/products/{id}/update", name="update_product")
      * @Method({"PATCH", "PUT"})
+     * @Security("has_role('IS_AUTHENTICATED_FULLY')")
      */
     public function update_recordAction($id, Request $request)
     {
@@ -212,6 +220,7 @@ class ApiProductsControllerController extends Controller
     /**
      * @Route("/api/products/{id}/delete", name="delete_product")
      * @Method({"DELETE"})
+     * @Security("has_role('IS_AUTHENTICATED_FULLY')")
      */
     public function delete_recordAction($id)
     {

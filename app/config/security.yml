@@ -22,3 +22,38 @@ security:
 
             # https://symfony.com/doc/current/security/form_login_setup.html
             #form_login: ~
+        login:
+            pattern:  ^/api/login
+            stateless: true
+            anonymous: true
+            form_login:
+                check_path:               /api/login_check
+                success_handler:          lexik_jwt_authentication.handler.authentication_success
+                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+                require_previous_session: false
+
+        api_products:
+            pattern:   ^/api/products/all
+            anonymous: true
+
+        api_product:
+            pattern:   ^/api/products/{id}
+            anonymous: true
+
+        api:
+            pattern:   ^/api/products/{id}/(delete|update)
+            stateless: true
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+
+        api:
+            pattern:   ^/api/products/create
+            stateless: true
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+
+    access_control:
+        - { path: ^/api/login,                roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/products/all,         roles: IS_AUTHENTICATED_ANONYMOUSLY }
