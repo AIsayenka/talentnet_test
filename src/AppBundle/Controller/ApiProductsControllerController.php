@@ -85,10 +85,10 @@ class ApiProductsControllerController extends Controller
     /**
      * @Route("/api/products/create", name="create_product")
      * @Method({"POST"})
-     * @Security("has_role('IS_AUTHENTICATED_FULLY')")
      */
     public function create_recordAction(Request $request)
     {
+        //var_dump($request->get("name", ""));die();
         // Validation groups
         $validation_groups = [
           "name", "sku", "quantity", "price"
@@ -140,7 +140,6 @@ class ApiProductsControllerController extends Controller
     /**
      * @Route("/api/products/{id}/update", name="update_product")
      * @Method({"PATCH", "PUT"})
-     * @Security("has_role('IS_AUTHENTICATED_FULLY')")
      */
     public function update_recordAction($id, Request $request)
     {
@@ -166,7 +165,7 @@ class ApiProductsControllerController extends Controller
         }
 
         // SKU
-        if($request->get("sku") !== "" && $request->get("sku") !== $record->getSku()) {
+        if($request->get("sku") !== null && $request->get("sku") !== $record->getSku()) {
           $record->setSku($request->get("sku"));
           $validation_groups[] = "sku";
         }
@@ -220,7 +219,6 @@ class ApiProductsControllerController extends Controller
     /**
      * @Route("/api/products/{id}/delete", name="delete_product")
      * @Method({"DELETE"})
-     * @Security("has_role('IS_AUTHENTICATED_FULLY')")
      */
     public function delete_recordAction($id)
     {
