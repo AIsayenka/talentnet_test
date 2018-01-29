@@ -22,7 +22,7 @@ To get it up and running
   $ openssl rsa -pubout -in var/jwt/private.pem -out var/jwt/public.pem
 ```
 
-#That's it. Now explanation of the login and routes
+# That's it. Now explanation of the login and routes
 
 The whole idea is that the data was got from https://github.com/TalentNet/coding-challenges/blob/master/roles/senior-php.md
 
@@ -33,7 +33,7 @@ All the actions, which require authorization, you will need to set up "Authoriza
     curl -X POST http://localhost:8000/api/getToken -d _username=bobby_fischer -d _password=testo
 
 
-#Routes list:
+# Routes list:
   - /api/getToken - POST route for acquiring JWT tokens
 
   ## Products
