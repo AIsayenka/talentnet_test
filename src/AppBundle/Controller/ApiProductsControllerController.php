@@ -16,8 +16,6 @@ use AppBundle\Entity\Product;
 
 class ApiProductsControllerController extends Controller
 {
-    private $manager;
-
     function __construct() {
       // Needed to run a query to save the data
       //$manager = $this->getDoctrine()->getManager();

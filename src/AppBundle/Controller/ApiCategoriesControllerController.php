@@ -15,8 +15,6 @@ use AppBundle\Entity\Category;
 
 class ApiCategoriesControllerController extends Controller
 {
-    private $manager;
-
     function __construct() {
       // Needed to run a query to save the data
       //$manager = $this->getDoctrine()->getManager();
