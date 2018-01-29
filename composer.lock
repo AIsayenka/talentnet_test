@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b4046fc70993c2fe2b38fd042c46788f",
+    "content-hash": "b2fc104795cc26b03b1f626cd5e9af99",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -2694,6 +2694,158 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "elephantly/kahlan-bundle",
+            "version": "v0.9.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/elephantly/kahlan-bundle.git",
+                "reference": "483353e088ddd164c434e7764e009d3fb6aee8e3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/elephantly/kahlan-bundle/zipball/483353e088ddd164c434e7764e009d3fb6aee8e3",
+                "reference": "483353e088ddd164c434e7764e009d3fb6aee8e3",
+                "shasum": ""
+            },
+            "require": {
+                "kahlan/kahlan": "~3.1|~4.0",
+                "kriswallsmith/buzz": "^0.15",
+                "php": ">=5.4",
+                "symfony/console": "~2.7|~3.0|~4.0",
+                "symfony/framework-bundle": "~2.7|~3.0|~4.0"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "Elephantly\\KahlanBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tiriel"
+                }
+            ],
+            "description": "Symfony bundle for Kahlan Test Framework integration",
+            "keywords": [
+                "BDD",
+                "Behavior-Driven Development",
+                "Monkey Patching",
+                "TDD",
+                "mock",
+                "stub",
+                "symfony",
+                "testing",
+                "unit test"
+            ],
+            "time": "2017-12-22T11:55:57+00:00"
+        },
+        {
+            "name": "kahlan/kahlan",
+            "version": "4.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kahlan/kahlan.git",
+                "reference": "f28d97e268c1fd5054280932b880e06417eddb6f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kahlan/kahlan/zipball/f28d97e268c1fd5054280932b880e06417eddb6f",
+                "reference": "f28d97e268c1fd5054280932b880e06417eddb6f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "squizlabs/php_codesniffer": "^2.7"
+            },
+            "bin": [
+                "bin/kahlan"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Kahlan\\": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "CrysaLEAD"
+                }
+            ],
+            "description": "The PHP Test Framework for Freedom, Truth and Justice.",
+            "keywords": [
+                "BDD",
+                "Behavior-Driven Development",
+                "Monkey Patching",
+                "TDD",
+                "mock",
+                "stub",
+                "testing",
+                "unit test"
+            ],
+            "time": "2017-10-14T15:51:22+00:00"
+        },
+        {
+            "name": "kriswallsmith/buzz",
+            "version": "v0.15.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kriswallsmith/Buzz.git",
+                "reference": "d0b82d8a6169276f91f445c26792ff4a2b11e831"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kriswallsmith/Buzz/zipball/d0b82d8a6169276f91f445c26792ff4a2b11e831",
+                "reference": "d0b82d8a6169276f91f445c26792ff4a2b11e831",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.3 || ^7.0"
+            },
+            "require-dev": {
+                "symfony/phpunit-bridge": "^3.3"
+            },
+            "suggest": {
+                "ext-curl": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Buzz\\": "lib/Buzz"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kris Wallsmith",
+                    "email": "kris.wallsmith@gmail.com",
+                    "homepage": "http://kriswallsmith.net/"
+                }
+            ],
+            "description": "Lightweight HTTP client",
+            "homepage": "https://github.com/kriswallsmith/Buzz",
+            "keywords": [
+                "curl",
+                "http client"
+            ],
+            "time": "2017-11-24T19:18:50+00:00"
+        },
         {
             "name": "sensio/generator-bundle",
             "version": "v3.1.7",
