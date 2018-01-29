@@ -13,7 +13,6 @@ use Symfony\Component\Validator\Constraints\DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 use AppBundle\Entity\Product;
-use AppBundle\Entity\Category;
 
 class ApiProductsControllerController extends Controller
 {
